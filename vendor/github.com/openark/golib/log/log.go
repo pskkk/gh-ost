@@ -19,7 +19,7 @@ package log
 import (
 	"errors"
 	"fmt"
-	"log/syslog"
+	//"log/syslog"
 	"os"
 	"runtime/debug"
 	"time"
@@ -87,7 +87,7 @@ var printStackTrace bool = false
 
 // syslogWriter is optional, and defaults to nil (disabled)
 var syslogLevel LogLevel = ERROR
-var syslogWriter *syslog.Writer
+//var syslogWriter *syslog.Writer
 
 // SetPrintStackTrace enables/disables dumping the stack upon error logging
 func SetPrintStackTrace(shouldPrintStackTrace bool) {
@@ -107,10 +107,10 @@ func GetLevel() LogLevel {
 
 // EnableSyslogWriter enables, if possible, writes to syslog. These will execute _in addition_ to normal logging
 func EnableSyslogWriter(tag string) (err error) {
-	syslogWriter, err = syslog.New(syslog.LOG_ERR, tag)
-	if err != nil {
-		syslogWriter = nil
-	}
+	//syslogWriter, err = syslog.New(syslog.LOG_ERR, tag)
+	//if err != nil {
+	//	syslogWriter = nil
+	//}
 	return err
 }
 
@@ -140,31 +140,33 @@ func logFormattedEntry(logLevel LogLevel, message string, args ...interface{}) s
 	entryString := fmt.Sprintf("%s %s %s", localizedTime.Format(TimeFormat), logLevel, msgArgs)
 	fmt.Fprintln(os.Stderr, entryString)
 
-	if syslogWriter != nil {
-		go func() error {
-			if logLevel > syslogLevel {
-				return nil
-			}
-			switch logLevel {
-			case FATAL:
-				return syslogWriter.Emerg(msgArgs)
-			case CRITICAL:
-				return syslogWriter.Crit(msgArgs)
-			case ERROR:
-				return syslogWriter.Err(msgArgs)
-			case WARNING:
-				return syslogWriter.Warning(msgArgs)
-			case NOTICE:
-				return syslogWriter.Notice(msgArgs)
-			case INFO:
-				return syslogWriter.Info(msgArgs)
-			case DEBUG:
-				return syslogWriter.Debug(msgArgs)
-			}
-			return nil
-		}()
-	}
-	return entryString
+	//if syslogWriter != nil {
+	//	go func() error {
+	//		if logLevel > syslogLevel {
+	//			return nil
+	//		}
+	//		switch logLevel {
+	//		case FATAL:
+	//			return syslogWriter.Emerg(msgArgs)
+	//		case CRITICAL:
+	//			return syslogWriter.Crit(msgArgs)
+	//		case ERROR:
+	//			return syslogWriter.Err(msgArgs)
+	//		case WARNING:
+	//			return syslogWriter.Warning(msgArgs)
+	//		case NOTICE:
+	//			return syslogWriter.Notice(msgArgs)
+	//		case INFO:
+	//			return syslogWriter.Info(msgArgs)
+	//		case DEBUG:
+	//			return syslogWriter.Debug(msgArgs)
+	//		}
+	//		return nil
+	//	}()
+	//}
+	//return entryString
+
+	return msgArgs
 }
 
 // logEntry emits a formatted log entry
